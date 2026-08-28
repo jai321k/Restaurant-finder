@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Live Location Dashboard</title>
+
+
+<!-- Leaflet CSS -->
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+
+body{
+    background:#111;
+    color:white;
+    padding:20px;
+}
+
+
+h1{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+
+.top-bar{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+
+button{
+    background:red;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+
+button:hover{
+    opacity:.9;
+}
+
+
+/* =========================
+   MAP
+========================= */
+
+#map{
+
+    width:100%;
+
+    height:70vh;
+
+    min-height:450px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    border:1px solid #444;
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status{
+
+    text-align:center;
+
+    margin:12px 0;
+
+    color:#aaa;
+
+}
+
+
+/* =========================
+   USER TABLE
+========================= */
+
+.table-container{
+
+    overflow-x:auto;
+
+    margin-top:15px;
+
+}
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+th,td{
+
+    border:1px solid #444;
+
+    padding:10px;
+
+    text-align:center;
+
+}
+
+
+th{
+
+    background:#222;
+
+}
+
+
+tr:nth-child(even){
+
+    background:#1a1a1a;
+
+}
+
+
+.user-online{
+
+    color:#4caf50;
+
+    font-weight:bold;
+
+}
+
+
+/* =========================
+   FOLLOW BUTTON
+========================= */
+
+.follow-btn{
+
+    background:#2196f3;
+
+    color:white;
+
+    border:none;
+
+    padding:7px 12px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+}
+
+
+/* =========================
+   LIVE MARKER
+========================= */
+
+.live-marker{
+
+    width:22px;
+
+    height:22px;
+
+    background:#2196f3;
+
+    border:3px solid white;
+
+    border-radius:50%;
+
+    box-shadow:
+    0 0 0 0 rgba(33,150,243,.7);
+
+    animation:pulse 1.5s infinite;
+
+}
+
+
+@keyframes pulse{
+
+    0%{
+
+        box-shadow:
+        0 0 0 0 rgba(33,150,243,.7);
+
+    }
+
+    70%{
+
+        box-shadow:
+        0 0 0 15px rgba(33,150,243,0);
+
+    }
+
+    100%{
+
+        box-shadow:
+        0 0 0 0 rgba(33,150,243,0);
+
+    }
+
+}
+
+
+/* Leaflet popup */
+
+.leaflet-popup-content{
+
+    margin:12px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>📍 Live Location Dashboard</h1>
+
+
+<div class="top-bar">
+
+    <button id="resetBtn">
+
+        🗑 Reset All Data
+
+    </button>
+
+</div>
+
+
+<div class="status" id="status">
+
+    Connecting to Firebase...
+
+</div>
+
+
+<!-- =========================
+     REAL MAP
+========================= -->
+
+<div id="map"></div>
+
+
+<!-- =========================
+     USER TABLE
+========================= -->
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+
+    <th>User ID</th>
+
+    <th>Accuracy</th>
+
+    <th>Date & Time</th>
+
+    <th>Status</th>
+
+    <th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tableBody">
+
+<tr>
+
+    <td colspan="5">
+
+        Loading...
+
+    </td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
+<!-- Leaflet JS -->
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+
+<script type="module">
+
+
+import {
+
+    initializeApp
+
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+    getDatabase,
+
+    ref,
+
+    onValue,
+
+    remove
+
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+// ========================================
+// FIREBASE CONFIG
+// ========================================
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyAMLlDotIoqkFGThycK04-VWpXGqwnvYTY",
+
+    authDomain:
+    "iive-location-bd318.firebaseapp.com",
+
+    databaseURL:
+    "https://iive-location-bd318-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+    "iive-location-bd318",
+
+    storageBucket:
+    "iive-location-bd318.firebasestorage.app",
+
+    messagingSenderId:
+    "46703855721",
+
+    appId:
+    "1:46703855721:web:890f5e0698a1bc52cf7af8",
+
+    measurementId:
+    "G-19CSC171YJ"
+
+};
+
+
+
+const app =
+initializeApp(firebaseConfig);
+
+
+const db =
+getDatabase(app);
+
+
+const usersRef =
+ref(db,"users");
+
+
+
+// ========================================
+// MAP
+// ========================================
+
+const map =
+L.map("map").setView(
+
+    [10.7905,78.7047],
+
+    7
+
+);
+
+
+
+L.tileLayer(
+
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+    {
+
+        maxZoom:19,
+
+        attribution:
+        "&copy; OpenStreetMap contributors"
+
+    }
+
+).addTo(map);
+
+
+
+// ========================================
+// MARKERS
+// ========================================
+
+const markers = {};
+
+
+
+// ========================================
+// FOLLOW STATE
+// ========================================
+
+let followedUser = null;
+
+
+
+// ========================================
+// FIRST LOCATION
+// ========================================
+
+let mapCentered = false;
+
+
+
+// ========================================
+// TABLE / STATUS
+// ========================================
+
+const tableBody =
+document.getElementById("tableBody");
+
+
+const status =
+document.getElementById("status");
+
+
+
+// ========================================
+// SMOOTH MARKER MOVEMENT
+// ========================================
+
+function smoothMoveMarker(
+
+    marker,
+
+    newLat,
+
+    newLng,
+
+    duration = 1000
+
+){
+
+    const start =
+    marker.getLatLng();
+
+
+    const startLat =
+    start.lat;
+
+
+    const startLng =
+    start.lng;
+
+
+    const startTime =
+    performance.now();
+
+
+
+    function animate(currentTime){
+
+        const elapsed =
+        currentTime - startTime;
+
+
+        const progress =
+        Math.min(
+
+            elapsed / duration,
+
+            1
+
+        );
+
+
+        // Smooth easing
+
+        const ease =
+        progress < 0.5
+
+        ? 2 * progress * progress
+
+        : 1 -
+        Math.pow(
+            -2 * progress + 2,
+            2
+        ) / 2;
+
+
+
+        const lat =
+        startLat +
+        (newLat - startLat) * ease;
+
+
+        const lng =
+        startLng +
+        (newLng - startLng) * ease;
+
+
+
+        marker.setLatLng([
+
+            lat,
+
+            lng
+
+        ]);
+
+
+
+        // Follow selected user
+
+        if(
+
+            followedUser ===
+            marker.userId
+
+        ){
+
+            map.panTo(
+
+                [lat,lng],
+
+                {
+
+                    animate:false
+
+                }
+
+            );
+
+        }
+
+
+
+        if(progress < 1){
+
+            requestAnimationFrame(
+                animate
+            );
+
+        }
+
+    }
+
+
+    requestAnimationFrame(
+        animate
+    );
+
+}
+
+
+
+// ========================================
+// CREATE CUSTOM MARKER
+// ========================================
+
+function createMarker(
+
+    uid,
+
+    lat,
+
+    lng
+
+){
+
+    const icon =
+    L.divIcon({
+
+        className:"",
+
+        html:
+        `<div class="live-marker"></div>`,
+
+        iconSize:[22,22],
+
+        iconAnchor:[11,11]
+
+    });
+
+
+
+    const marker =
+    L.marker(
+
+        [lat,lng],
+
+        {
+
+            icon:icon
+
+        }
+
+    ).addTo(map);
+
+
+
+    marker.userId =
+    uid;
+
+
+
+    markers[uid] =
+    marker;
+
+
+
+    return marker;
+
+}
+
+
+
+// ========================================
+// FIREBASE REALTIME LISTENER
+// ========================================
+
+onValue(
+
+    usersRef,
+
+    (snapshot)=>{
+
+
+        const data =
+        snapshot.val();
+
+
+
+        tableBody.innerHTML = "";
+
+
+
+        // ====================================
+        // NO DATA
+        // ====================================
+
+        if(!data){
+
+
+            status.innerText =
+            "🔴 No users connected";
+
+
+            tableBody.innerHTML = `
+
+                <tr>
+
+                    <td colspan="5">
+
+                        No Data Found
+
+                    </td>
+
+                </tr>
+
+            `;
+
+
+
+            // Remove markers
+
+            for(
+
+                const uid in markers
+
+            ){
+
+                map.removeLayer(
+                    markers[uid]
+                );
+
+                delete markers[uid];
+
+            }
+
+
+            mapCentered = false;
+
+
+            return;
+
+        }
+
+
+
+        let firstLocation =
+        null;
+
+
+        let userCount =
+        0;
+
+
+
+        // ====================================
+        // LOOP USERS
+        // ====================================
+
+        for(
+
+            const uid in data
+
+        ){
+
+
+            const user =
+            data[uid];
+
+
+            const lat =
+            parseFloat(
+                user.latitude
+            );
+
+
+            const lng =
+            parseFloat(
+                user.longitude
+            );
+
+
+
+            // Invalid location
+
+            if(
+
+                isNaN(lat) ||
+
+                isNaN(lng)
+
+            ){
+
+                continue;
+
+            }
+
+
+
+            userCount++;
+
+
+
+            // =================================
+            // FIRST LOCATION
+            // =================================
+
+            if(!firstLocation){
+
+                firstLocation =
+                [lat,lng];
+
+            }
+
+
+
+            // =================================
+            // DATE TIME
+            // =================================
+
+            const dateTime =
+            user.timestamp
+
+            ? new Date(
+                user.timestamp
+              ).toLocaleString()
+
+            : "N/A";
+
+
+
+            // =================================
+            // POPUP
+            // =================================
+
+            const popupContent = `
+
+                <div style="
+                    color:#111;
+                    min-width:200px;
+                ">
+
+                    <b>👤 User</b>
+
+                    <br>
+
+                    ${uid}
+
+                    <br><br>
+
+                    <b>🎯 Accuracy</b>
+
+                    <br>
+
+                    ${user.accuracy ?? "N/A"} m
+
+                    <br><br>
+
+                    <b>🕒 Last Update</b>
+
+                    <br>
+
+                    ${dateTime}
+
+                    <br><br>
+
+                    <button
+                        class="follow-btn"
+                        onclick="
+                        window.focusUser('${uid}')
+                        "
+                    >
+
+                        🎯 Follow User
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+
+            // =================================
+            // EXISTING MARKER
+            // =================================
+
+            if(markers[uid]){
+
+
+                smoothMoveMarker(
+
+                    markers[uid],
+
+                    lat,
+
+                    lng,
+
+                    1000
+
+                );
+
+
+                markers[uid]
+                .setPopupContent(
+                    popupContent
+                );
+
+
+            }
+
+            // =================================
+            // NEW MARKER
+            // =================================
+
+            else{
+
+
+                const marker =
+                createMarker(
+
+                    uid,
+
+                    lat,
+
+                    lng
+
+                );
+
+
+                marker.bindPopup(
+                    popupContent
+                );
+
+
+            }
+
+
+
+            // =================================
+            // TABLE ROW
+            // =================================
+
+            const row =
+            document.createElement("tr");
+
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    ${uid}
+
+                </td>
+
+
+                <td>
+
+                    ${
+                        user.accuracy
+                        ?? "N/A"
+                    } m
+
+                </td>
+
+
+                <td>
+
+                    ${dateTime}
+
+                </td>
+
+
+                <td class="user-online">
+
+                    🟢 Live
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="follow-btn"
+                        onclick="
+                        window.focusUser('${uid}')
+                        "
+                    >
+
+                        🎯 Follow
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+
+            tableBody.appendChild(row);
+
+        }
+
+
+
+        // ====================================
+        // REMOVE DELETED USERS
+        // ====================================
+
+        for(
+
+            const uid in markers
+
+        ){
+
+            if(!data[uid]){
+
+
+                map.removeLayer(
+                    markers[uid]
+                );
+
+
+                delete markers[uid];
+
+
+                if(
+                    followedUser === uid
+                ){
+
+                    followedUser =
+                    null;
+
+                }
+
+            }
+
+        }
+
+
+
+        // ====================================
+        // CENTER MAP ONLY ONCE
+        // ====================================
+
+        if(
+
+            firstLocation &&
+
+            !mapCentered
+
+        ){
+
+            map.setView(
+
+                firstLocation,
+
+                17,
+
+                {
+
+                    animate:true
+
+                }
+
+            );
+
+
+            mapCentered = true;
+
+        }
+
+
+
+        // ====================================
+        // STATUS
+        // ====================================
+
+        status.innerText =
+
+        `🟢 ${userCount} device(s) live`;
+
+    }
+
+);
+
+
+
+// ========================================
+// FOLLOW USER
+// ========================================
+
+window.focusUser =
+function(uid){
+
+
+    const marker =
+    markers[uid];
+
+
+    if(!marker){
+
+        return;
+
+    }
+
+
+    followedUser =
+    uid;
+
+
+
+    const position =
+    marker.getLatLng();
+
+
+
+    map.setView(
+
+        position,
+
+        18,
+
+        {
+
+            animate:true
+
+        }
+
+    );
+
+
+    marker.openPopup();
+
+};
+
+
+
+// ========================================
+// RESET ALL DATA
+// ========================================
+
+document
+.getElementById("resetBtn")
+.addEventListener(
+
+    "click",
+
+    ()=>{
+
+
+        const confirmDelete =
+        confirm(
+
+            "Are you sure you want to delete all location data?"
+
+        );
+
+
+
+        if(!confirmDelete){
+
+            return;
+
+        }
+
+
+
+        remove(usersRef)
+
+        .then(()=>{
+
+            alert(
+                "All location data deleted."
+            );
+
+        })
+
+        .catch((error)=>{
+
+            alert(
+
+                "Error: " +
+                error.message
+
+            );
+
+        });
+
+    }
+
+);
+
+</script>
+
+</body>
+</html>
