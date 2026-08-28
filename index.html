@@ -177,75 +177,209 @@ button{
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    set
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAMLlDotIoqkFGThycK04-VWpXGqwnvYTY",
-  authDomain: "iive-location-bd318.firebaseapp.com",
-  databaseURL: "https://iive-location-bd318-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "iive-location-bd318",
-  storageBucket: "iive-location-bd318.firebasestorage.app",
-  messagingSenderId: "46703855721",
-  appId: "1:46703855721:web:890f5e0698a1bc52cf7af8",
-  measurementId: "G-19CSC171YJ"
+
+    apiKey: "AIzaSyAMLlDotIoqkFGThycK04-VWpXGqwnvYTY",
+
+    authDomain:
+    "iive-location-bd318.firebaseapp.com",
+
+    databaseURL:
+    "https://iive-location-bd318-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+    "iive-location-bd318",
+
+    storageBucket:
+    "iive-location-bd318.firebasestorage.app",
+
+    messagingSenderId:
+    "46703855721",
+
+    appId:
+    "1:46703855721:web:890f5e0698a1bc52cf7af8",
+
+    measurementId:
+    "G-19CSC171YJ"
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
 
-const btn = document.getElementById("shareBtn");
-const status = document.getElementById("status");
+
+const btn =
+document.getElementById("shareBtn");
+
+const status =
+document.getElementById("status");
+
+
+// ======================================
+// CREATE ONE PERMANENT DEVICE ID
+// ======================================
+
+let uid = localStorage.getItem("location_uid");
+
+if (!uid) {
+
+    uid =
+    "user_" +
+    crypto.randomUUID();
+
+    localStorage.setItem(
+        "location_uid",
+        uid
+    );
+
+}
+
+
+// ======================================
+// WATCH ID
+// ======================================
+
+let watchId = null;
+
+
+// ======================================
+// START LIVE LOCATION
+// ======================================
 
 btn.addEventListener("click", () => {
 
     if (!navigator.geolocation) {
-        status.innerText = "Geolocation not supported";
+
+        status.innerText =
+        "Geolocation not supported ❌";
+
         return;
     }
 
-    status.innerText = "Requesting location...";
 
+    // Prevent starting twice
+
+    if (watchId !== null) {
+
+        status.innerText =
+        "Live location already running 🟢";
+
+        return;
+    }
+
+
+    status.innerText =
+    "Requesting location... 📍";
+
+
+    watchId =
     navigator.geolocation.watchPosition(
 
         async (position) => {
 
             try {
 
-                const uid = "user_" + Date.now();
+                const lat =
+                position.coords.latitude;
 
-                await set(ref(db, "users/" + uid), {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                    timestamp: Date.now(),
-                    userAgent: navigator.userAgent
-                });
+                const lng =
+                position.coords.longitude;
 
-                status.innerText = "Location sent successfully ✅";
+                const accuracy =
+                position.coords.accuracy;
+
+
+                // ==================================
+                // UPDATE SAME USER
+                // ==================================
+
+                await set(
+                    ref(
+                        db,
+                        "users/" + uid
+                    ),
+                    {
+
+                        latitude: lat,
+
+                        longitude: lng,
+
+                        accuracy: accuracy,
+
+                        timestamp: Date.now(),
+
+                        userAgent:
+                        navigator.userAgent
+
+                    }
+                );
+
+
+                status.innerText =
+                "🟢 Live location active";
+
 
             } catch (err) {
-                status.innerText = "Firebase Error: " + err.message;
+
+                status.innerText =
+                "Firebase Error: " +
+                err.message;
+
             }
+
         },
+
 
         (error) => {
 
-            if (error.code === 1)
-                status.innerText = "Permission denied ❌";
-            else if (error.code === 2)
-                status.innerText = "Location unavailable 📍";
-            else
-                status.innerText = "Timeout ⏱️";
+            if (error.code === 1) {
+
+                status.innerText =
+                "Permission denied ❌";
+
+            }
+
+            else if (error.code === 2) {
+
+                status.innerText =
+                "Location unavailable 📍";
+
+            }
+
+            else {
+
+                status.innerText =
+                "Location timeout ⏱️";
+
+            }
 
         },
 
+
         {
+
             enableHighAccuracy: true,
+
             timeout: 15000,
+
             maximumAge: 0
+
         }
+
     );
+
 });
 
 </script>
